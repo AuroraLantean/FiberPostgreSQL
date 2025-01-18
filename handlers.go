@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Microsoft/go-winio/pkg/guid"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -28,6 +29,8 @@ func getAuthorById(c *fiber.Ctx) error {
 	slog.Info("info", "authorId", authorId)
 	return c.JSON(fiber.Map{"authorId": authorId})
 }
+
+// --------------== Item
 func getItems(c *fiber.Ctx) error {
 	slog.Info("get items")
 	itemPath := c.Params("*")
@@ -40,6 +43,33 @@ func getItems(c *fiber.Ctx) error {
 		slog.Info("\t-item subPath", "subPath", subsubPath)
 	}
 	return c.JSON(fiber.Map{"itemPath": itemPath})
+}
+
+// -------------== Multiple Handlers / Middleware
+func addRequestID(c *fiber.Ctx) error {
+	// add a unique request ID to each request
+	// https://github.com/Microsoft/go-winio
+	uid, _ := guid.NewV4()
+	c.Request().Header.Add("REQUEST-ID", uid.String())
+	return c.Next()
+}
+func requestLogger(c *fiber.Ctx) error {
+	// log request method, path, and param 'id'
+	reqId := c.Request().Header.Peek("REQUEST-ID")
+	slog.Info("got request", "method", c.Method(), "path", c.Path(), "id", c.Params("id"), "requestId", reqId)
+	return c.Next()
+}
+
+func getItemById(c *fiber.Ctx) error {
+	item := struct {
+		ID   int    `json:"id"`
+		Name string `json:"name"`
+	}{
+		ID:   1,
+		Name: "Widget 1 for ACME",
+	}
+
+	return c.JSON(item)
 }
 
 const GRID = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" //goroutine Id

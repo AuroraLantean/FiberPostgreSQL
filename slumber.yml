@@ -1,0 +1,119 @@
+# For basic usage info, see:
+# https://slumber.lucaspickering.me/book/getting_started.html
+# For all collection options, see:
+# https://slumber.lucaspickering.me/book/api/request_collection/index.html
+# https://slumber.lucaspickering.me/book/api/request_collection/chain.html
+
+# Profiles are groups of data you can easily switch between. A common usage is
+# to define profiles for various environments of a REST service
+profiles:
+  local:
+    name: Local
+    data:
+      host: http://localhost:3000
+  production:
+    name: production
+    data:
+      host: https://mydomain.com
+
+chains:
+# Prompt the user for a value whenever the request is made: {{chains.id}}
+  id:
+    source: !prompt
+      message: Enter id
+    sensitive: true
+  username:
+    source: !file
+      path: ./username.txt
+  password:
+    source: !env
+      variable: USERNAME
+  # Use the output of an external command
+  command:
+    source: !command
+      command: [whoami]
+    trim: both # Shell commands often include an unwanted trailing newline
+
+# Prompt the user to select a value from a static list
+  fruit:
+    source: !select
+      message: Select Fruit
+      options:
+        - apple
+        - banana
+        - guava
+  fruit_from_resp:
+    source: !request
+      recipe: get_fruits
+    # Assume this response body looks like:
+    # [{ "name": "apple" }, { "name": "guava" }, { "name": "pear" }]
+    selector: $[*].name
+  dynamic_fruit:
+    source: !select
+      message: Select Fruit
+      options: "{{chains.fruit_from_resp}}"
+    
+# Prompt the user for a value whenever the request is made: {{chains.char}}
+  char:
+    source: !prompt
+      message: Enter char
+    sensitive: true
+# Assume the request recipe with ID `login` returns a body like `{"token": "1234abcd"}`
+  auth_token:
+    source: !request
+      recipe: login
+    selector: $.token
+#Capture X-CSRF-TOKEN header value: `{"csrf_token": "foo"}`
+  csrftoken:
+    source: !request
+      recipe: get_csrf_token
+    selector: $.csrf_token
+    #section: !header X-CSRF-TOKEN
+    #section: !header Token # This will take the value of the 'Token' header
+
+requests:
+  # slumber request -p local home
+  home: !request
+    method: GET
+    url: "{{host}}/"
+
+  foo: !request
+    method: GET
+    url: "{{host}}/foo"
+
+  get_books: !request
+    method: GET
+    url: "{{host}}/books"
+
+  get_book_by_id: !request
+    method: GET
+    url: "{{host}}/books/{{chains.id}}"
+
+  get_author_by_id: !request
+    method: GET
+    url: "{{host}}/authors/{{chains.id}}"
+
+  get_items: !request
+    method: GET
+    url: "{{host}}/items/{{chains.id}}"
+  get_items_name_type_id: !request
+    method: GET
+    url: "{{host}}/items/name/type/{{chains.id}}"
+  get_item_by_id: !request
+    method: GET
+    url: "{{host}}/item/{{chains.id}}"
+
+  post: !request
+    method: POST
+    url: "{{host}}/post"
+    body: !json { "id": 3, "name": "Slumber" }
+
+  #https://slumber.lucaspickering.me/book/user_guide/chains.html
+  login: !request
+    method: POST
+    url: "{{host}}/login"
+    body: !json {
+        "username": "{{chains.username}}",
+        "password": "{{chains.password}}",
+      }
+    

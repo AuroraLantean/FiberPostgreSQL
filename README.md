@@ -1,10 +1,13 @@
 # Golang Backend: Fiber + GORM + PostgreSQL + Websocket
 
-TODO: https://github.com/gofiber/fiber
-Coding with Verrol
-https://www.youtube.com/watch?v=6IU_XdZngv4&list=PL0aDKsruoiW1H8Q1bZPL5SOrXQcibcjrz&index=3
+TODO
+Fiber Framework: https://github.com/gofiber/fiber
 
-Hitesh Choudhary
+Coding with Verrol
+- Repo: https://github.com/striversity/gotr
+- YouTube: https://www.youtube.com/watch?v=82-30eN69Xk&list=PL0aDKsruoiW1H8Q1bZPL5SOrXQcibcjrz&index=7
+
+Go Programming by Hitesh Choudhary
 https://www.youtube.com/watch?v=JoJ8Sw5Yb4c&list=PLRAV69dS1uWQGDQoBYMZWKjzuhCaOnBpa
 
 

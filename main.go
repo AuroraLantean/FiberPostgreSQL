@@ -29,6 +29,7 @@ func main() {
 	app.Get("/books/:id", getBookById).Name("get book by Id")
 	app.Get("/authors/:id?", getAuthorById).Name("get author by Id")
 	app.Get("/items/*", getItems).Name("get items with wildcard")
+	app.Get("/item/:id", addRequestID, requestLogger, getItemById)
 
 	log.Fatal(app.Listen(":3000"))
 }

@@ -10,7 +10,7 @@ zz*.sh
 cicd*
 backendFunc/
 wallets
-slumber*
+slumberOld.yml
 
 main
 main.zip

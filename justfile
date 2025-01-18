@@ -26,13 +26,19 @@ fmt:
 	go fmt
 tidy:
   go mod tidy
+install:
+  go install
+add:
+  go get -d github.com/xyz/v1
 update:
 	go get -u
 	go mod tidy
+term:
+  terminator -l '12GoFiber1' > /dev/null 2>&1 &  
 run:
 	go run *.go
 # to run and watch file changes... depending on  watchexec: cargo binstall watchexec-cli
-run selection:
+runm selection:
   @echo 'Run {{selection}} ...'
   go run *.go
 watch:
