@@ -1,6 +1,7 @@
 package main
 
 import (
+	"backend/handlers"
 	"log/slog"
 
 	"github.com/charmbracelet/log"
@@ -24,12 +25,16 @@ func main() {
 		//CaseSesitive: true, //but do not do this
 	}
 	app := fiber.New(appConfig)
+	app.Use(handlers.RequestID, handlers.Logging)
+	//app.Get("/items/*", getItems).Name("get items with wildcard")
+	app.Get("/items", handlers.GetItems)
+	app.Get("/item/:id", getItemById)
+	app.Post("/login", handlers.Login)
+
 	app.Get("/special/:name", getHandler).Name("get default") // requires /:name
-	app.Get("/books", getBooks).Name("get books")
-	app.Get("/books/:id", getBookById).Name("get book by Id")
-	app.Get("/authors/:id?", getAuthorById).Name("get author by Id")
-	app.Get("/items/*", getItems).Name("get items with wildcard")
-	app.Get("/item/:id", addRequestID, requestLogger, getItemById)
+	app.Get("/books", handlers.GetBooks).Name("get books")
+	app.Get("/books/:id", handlers.GetBookById).Name("get book by Id")
+	app.Get("/authors/:id?", handlers.GetAuthorById).Name("get author by Id")
 
 	log.Fatal(app.Listen(":3000"))
 }

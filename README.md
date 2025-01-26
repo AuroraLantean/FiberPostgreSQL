@@ -3,6 +3,9 @@
 TODO
 Fiber Framework: https://github.com/gofiber/fiber
 
+Flo Woelki
+https://www.youtube.com/@FloWoelki/videos
+
 Coding with Verrol
 - Repo: https://github.com/striversity/gotr
 - YouTube: https://www.youtube.com/watch?v=82-30eN69Xk&list=PL0aDKsruoiW1H8Q1bZPL5SOrXQcibcjrz&index=7
@@ -25,7 +28,6 @@ Setup you GOROOT and GOPATH
 Make a repo folder
 ```
 go mod init backend
-go get github.com/gofiber/fiber/v2
-go get github.com/charmbracelet/log@latest
+just install
 just run
 ```

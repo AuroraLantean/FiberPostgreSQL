@@ -6,29 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Microsoft/go-winio/pkg/guid"
 	"github.com/gofiber/fiber/v2"
 )
-
-func getBooks(c *fiber.Ctx) error {
-	slog.Info("get all books")
-	return c.JSON(fiber.Map{"book1": "bookName1"})
-}
-func getBookById(c *fiber.Ctx) error {
-	slog.Info("get the book by Id")
-	bookId := c.Params("id")
-	slog.Info("info", "bookId", bookId)
-	return c.JSON(fiber.Map{"bookId": bookId})
-}
-func getAuthorById(c *fiber.Ctx) error {
-	slog.Info("get the author by Id")
-	authorId := c.Params("id")
-	if authorId == "" {
-		return c.JSON(fiber.Map{"authorId": "id is empty"}) //c.SendString("id is empty")
-	}
-	slog.Info("info", "authorId", authorId)
-	return c.JSON(fiber.Map{"authorId": authorId})
-}
 
 // --------------== Item
 func getItems(c *fiber.Ctx) error {
@@ -43,21 +22,6 @@ func getItems(c *fiber.Ctx) error {
 		slog.Info("\t-item subPath", "subPath", subsubPath)
 	}
 	return c.JSON(fiber.Map{"itemPath": itemPath})
-}
-
-// -------------== Multiple Handlers / Middleware
-func addRequestID(c *fiber.Ctx) error {
-	// add a unique request ID to each request
-	// https://github.com/Microsoft/go-winio
-	uid, _ := guid.NewV4()
-	c.Request().Header.Add("REQUEST-ID", uid.String())
-	return c.Next()
-}
-func requestLogger(c *fiber.Ctx) error {
-	// log request method, path, and param 'id'
-	reqId := c.Request().Header.Peek("REQUEST-ID")
-	slog.Info("got request", "method", c.Method(), "path", c.Path(), "id", c.Params("id"), "requestId", reqId)
-	return c.Next()
 }
 
 func getItemById(c *fiber.Ctx) error {
